@@ -66,7 +66,7 @@ def COPD_untreated(patient, level_severity):
     # And write it out to the console
     data_mgr.to_console(results)
 
-
+# only need to uncomment if running individual file
 # if __name__ == '__main__':
 #     # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
 #     names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]

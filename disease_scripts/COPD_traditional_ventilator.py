@@ -87,24 +87,24 @@ def COPD_ventilator_traditional(patient, level_severity, VoT):
     # And write it out to the console
     data_mgr.to_console(results)
 
-
-if __name__ == '__main__':
-    # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
-    names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
-    # List of patient's weights in lb
-    weights = [96.4, 215.7, 176.4, 176.4, 158.4, 206.4, 176.4, 196.4, 156.4, 80.6]
-    # Give each patient 12 ml/kg in VT
-    VT = [w / 2.20462 * 12 for w in weights]
-    severities = [0.3, 0.6, 0.9]
-    processes = []
-
-    # Add a new thread for every patient at each severity, start each thread, and join them
-    for i, name in enumerate(names):
-        for severity in severities:
-            processes.append(mp.Process(None, COPD_ventilator_traditional, args=(name, severity, VT[i])))
-
-    for p in processes:
-        p.start()
-
-    for p in processes:
-        p.join()
+# only need to uncomment if running individual file
+# if __name__ == '__main__':
+#     # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
+#     names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
+#     # List of patient's weights in lb
+#     weights = [96.4, 215.7, 176.4, 176.4, 158.4, 206.4, 176.4, 196.4, 156.4, 80.6]
+#     # Give each patient 12 ml/kg in VT
+#     VT = [w / 2.20462 * 12 for w in weights]
+#     severities = [0.3, 0.6, 0.9]
+#     processes = []
+#
+#     # Add a new thread for every patient at each severity, start each thread, and join them
+#     for i, name in enumerate(names):
+#         for severity in severities:
+#             processes.append(mp.Process(None, COPD_ventilator_traditional, args=(name, severity, VT[i])))
+#
+#     for p in processes:
+#         p.start()
+#
+#     for p in processes:
+#         p.join()

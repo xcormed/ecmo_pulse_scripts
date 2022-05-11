@@ -79,20 +79,20 @@ def COPD_nonrebreather(patient, level_severity):
     # And write it out to the console
     data_mgr.to_console(results)
 
-
-if __name__ == '__main__':
-    # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
-    names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
-    severities = [0.3, 0.6, 0.9]
-    processes = []
-
-# Add a new thread for every patient at each severity, start each thread, and join them
-    for name in names:
-        for severity in severities:
-            processes.append(mp.Process(None, COPD_nonrebreather, args=(name, severity)))
-
-    for p in processes:
-        p.start()
-
-    for p in processes:
-        p.join()
+# only need to uncomment if running individual file
+# if __name__ == '__main__':
+#     # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
+#     names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
+#     severities = [0.3, 0.6, 0.9]
+#     processes = []
+#
+# # Add a new thread for every patient at each severity, start each thread, and join them
+#     for name in names:
+#         for severity in severities:
+#             processes.append(mp.Process(None, COPD_nonrebreather, args=(name, severity)))
+#
+#     for p in processes:
+#         p.start()
+#
+#     for p in processes:
+#         p.join()
