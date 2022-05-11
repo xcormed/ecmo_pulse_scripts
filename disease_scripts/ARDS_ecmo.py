@@ -1,4 +1,3 @@
-
 from pulse.cdm.patient_actions import SEAcuteRespiratoryDistressSyndromeExacerbation
 from pulse.engine.PulseEngine import PulseEngine
 from pulse.cdm.scalars import FrequencyUnit, MassUnit, MassPerVolumeUnit, \
@@ -39,6 +38,8 @@ def ARDS_ecmo(patient, level_severity):
         SEDataRequest.create_substance_request("Sodium", "MassInBody", unit=MassUnit.g),
         SEDataRequest.create_liquid_compartment_substance_request("Aorta", "CarbonDioxide", "PartialPressure", unit=PressureUnit.mmHg),
         SEDataRequest.create_liquid_compartment_substance_request("Aorta", "Oxygen", "PartialPressure", unit=PressureUnit.mmHg),
+        SEDataRequest.create_substance_request("Oxygen", "BloodConcentration", unit=MassPerVolumeUnit.g_Per_L),
+        SEDataRequest.create_substance_request("CarbonDioxide", "BloodConcentration", unit=MassPerVolumeUnit.g_Per_L),
         # ECMO Compartments
         SEDataRequest.create_liquid_compartment_request("ECMOBloodSamplingPort", "InFlow", unit=VolumePerTimeUnit.mL_Per_s),
         SEDataRequest.create_liquid_compartment_request("ECMOBloodSamplingPort", "OutFlow", unit=VolumePerTimeUnit.mL_Per_s),
@@ -46,11 +47,7 @@ def ARDS_ecmo(patient, level_severity):
         SEDataRequest.create_liquid_compartment_request("ECMOOxygenator", "OutFlow", unit=VolumePerTimeUnit.mL_Per_s),
         SEDataRequest.create_liquid_compartment_substance_request("ECMOOxygenator", "Sodium", "Concentration", unit=MassPerVolumeUnit.g_Per_dL),
         SEDataRequest.create_liquid_compartment_substance_request("VenaCava", "Sodium", "Concentration", unit=MassPerVolumeUnit.g_Per_dL),
-        SEDataRequest.create_liquid_compartment_substance_request("Aorta", "Sodium", "Concentration", unit=MassPerVolumeUnit.g_Per_dL),
-        SEDataRequest.create_liquid_compartment_substance_request("VenaCava", "Oxygen", "Concentration",
-                                                                  unit=MassPerVolumeUnit.g_Per_dL),
-        SEDataRequest.create_liquid_compartment_substance_request("VenaCava", "CarbonDioxide", "Concentration",
-                                                                  unit=MassPerVolumeUnit.g_Per_dL)
+        SEDataRequest.create_liquid_compartment_substance_request("Aorta", "Sodium", "Concentration", unit=MassPerVolumeUnit.g_Per_dL)
     ]
 
     # Produce a data manager object with the data request list, and tell it where to save
@@ -91,7 +88,7 @@ def ARDS_ecmo(patient, level_severity):
     # O2 Added[g / dL] = 0.00992
     # add this value of O2 to the amount of O2 already in
     settings.get_substance_concentration("Oxygen").get_concentration().set_value(
-        results[list(results)[28]][-1] + 0.00992
+        results[list(results)[21]][-1]*10 + 0.00992
         , MassPerVolumeUnit.g_Per_dL)
     # Calculate the amount of CO2 to remove from the ECMO circuit and process the action
     # CO2 Removed[g / min] = -0.0057 * (Blood Flow Rate[L / min]) ^ 2 + 0.1276 * (Blood Flow Rate[L / min]) + 0.0105
@@ -101,7 +98,7 @@ def ARDS_ecmo(patient, level_severity):
     # CO2 Removed[g / L] = .321 / 1 = .321
     # CO2 Removed[g / dL] = .321 / 1 = .0321
     settings.get_substance_concentration("CarbonDioxide").get_concentration().set_value(
-        results[list(results)[29]][-1] - 0.0321, MassPerVolumeUnit.g_Per_dL)
+        results[list(results)[22]][-1]*10 - 0.0321, MassPerVolumeUnit.g_Per_dL)
 
     pulse.process_action(cfg)
 
@@ -109,8 +106,8 @@ def ARDS_ecmo(patient, level_severity):
     # Check that O2 saturation must not exceed 1 and pO2 must be <=300 mmHg
     # O2 added may be lower in order to fulfill this boundary condition
     while results[list(results)[7]][-1] > 1.0 or results[list(results)[20]][-1] > 300:
-        current_oxygen = results[list(results)[20]][-1]
-        new_oxygen = current_oxygen * .999
+        current_oxygen = results[list(results)[21]][-1]
+        new_oxygen = current_oxygen*10 * .999
         settings.get_substance_concentration("Oxygen").get_concentration().set_value(new_oxygen,
                                                                                      MassPerVolumeUnit.g_Per_dL)
         pulse.process_action(cfg)
@@ -120,8 +117,8 @@ def ARDS_ecmo(patient, level_severity):
     # Check that pCO2 must be >=15 mmHg
     # CO2 removed may be lower in order to fulfill this boundary condition
     while results[list(results)[19]][-1] < 15:
-        current_co2 = results[list(results)[19]][-1]
-        new_co2 = current_co2 * .999
+        current_co2 = results[list(results)[22]][-1]
+        new_co2 = current_co2*10 * .999
         settings.get_substance_concentration("CarbonDioxide").get_concentration().set_value(new_co2,
                                                                                             MassPerVolumeUnit.g_Per_dL)
         pulse.process_action(cfg)
@@ -134,19 +131,19 @@ def ARDS_ecmo(patient, level_severity):
     data_mgr.to_console(results)
 
 
-if __name__ == '__main__':
-    # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
-    names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
-    severities = [0.3, 0.6, 0.9]
-    processes = []
-
-# Add a new thread for every patient at each severity, start each thread, and join them
-    for name in names:
-        for severity in severities:
-            processes.append(mp.Process(None, ARDS_ecmo, args=(name, severity)))
-
-    for p in processes:
-        p.start()
-
-    for p in processes:
-        p.join()
+# if __name__ == '__main__':
+#     # # Simulate across all 10 patients, giving each severities of 0.3, 0.6, and 0.9
+#     names = ["Cynthia", "Gus", "Joel", "Nathan", "Rick", "Hassan", "Soldier", "Jeff", "Carol", "Jane"]
+#     severities = [0.3, 0.6, 0.9]
+#     processes = []
+#
+# # Add a new thread for every patient at each severity, start each thread, and join them
+#     for name in names:
+#         for severity in severities:
+#             processes.append(mp.Process(None, ARDS_ecmo, args=(name, severity)))
+#
+#     for p in processes:
+#         p.start()
+#
+#     for p in processes:
+#         p.join()
