@@ -18,6 +18,8 @@ def analyze_other_properties(case, property_type):
     property_nonrebreather = np.zeros((len(names), len(severities)))
     property_ventilator = np.zeros((len(names), len(severities)))
     property_traditional_ventilator = np.zeros((len(names), len(severities)))
+    property_ecmo_traditional_ventilator = np.zeros((len(names), len(severities)))
+    property_ecmo_protective_ventilator = np.zeros((len(names), len(severities)))
 
     for i in range(len(names)):
         for j in range(len(severities)):
@@ -48,6 +50,19 @@ def analyze_other_properties(case, property_type):
                                  delimiter=',', names=True, dtype=None)
             property_traditional_ventilator[i, j] = np.mean(data[property_type][-1000:])
 
+            # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
+            property_ecmo_traditional_ventilator[i, j] = \
+                data["BicarbonateBloodConcentrationgL"][-1] * 1000 / 61.0168 + \
+                data["AortaCarbonDioxidePartialPressuremmHg"][-1] * .0308
+
+            data = np.genfromtxt("./test_results/XCOR/{}_ecmo_protective_ventilator{}_{}.csv".format(case, names[i],
+                                                                                                     severities[j]),
+                                 delimiter=",", names=True, dtype=None)
+            # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
+            property_ecmo_protective_ventilator[i, j] = \
+                data["BicarbonateBloodConcentrationgL"][-1] * 1000 / 61.0168 + \
+                data["AortaCarbonDioxidePartialPressuremmHg"][-1] * .0308
+
     print("Untreated:")
     print(property_untreated)
     print("Ecmo:")
@@ -60,15 +75,21 @@ def analyze_other_properties(case, property_type):
     print(property_ventilator)
     print("Traditional ventilator:")
     print(property_traditional_ventilator)
+    print("Ecmo and Traditional ventilator:")
+    print(property_ecmo_traditional_ventilator)
+    print("Ecmo and Protective ventilator:")
+    print(property_ecmo_protective_ventilator)
 
     w = 0.2
-    X = np.array([0, 1, 2, 3, 4, 5])
+    X = np.array([0, 1, 2, 3, 4, 5, 6, 7])
 
     # plot the mild data
     plt.figure(figsize=[8, 4.8])
     c = 'green'
     plt.boxplot([property_untreated[:, 0], property_ecmo[:, 0], property_nasal_cannula[:, 0], property_nonrebreather[:, 0],
-                 property_ventilator[:, 0], property_traditional_ventilator[:, 0]], positions=X, widths=w, notch=True,
+                 property_ventilator[:, 0], property_traditional_ventilator[:, 0], property_ecmo_traditional_ventilator[:, 0],
+                 property_ecmo_protective_ventilator[:, 0]],
+                positions=X, widths=w, notch=True,
                 patch_artist=True,
                 boxprops=dict(facecolor=c, color=c),
                 capprops=dict(color=c),
@@ -80,7 +101,9 @@ def analyze_other_properties(case, property_type):
     # plot the moderate data
     c = 'orange'
     plt.boxplot([property_untreated[:, 1], property_ecmo[:, 1], property_nasal_cannula[:, 1], property_nonrebreather[:, 1],
-                 property_ventilator[:, 1], property_traditional_ventilator[:, 1]], positions=X+w, widths=w, notch=True,
+                 property_ventilator[:, 1], property_traditional_ventilator[:, 1], property_ecmo_traditional_ventilator[:, 0],
+                 property_ecmo_protective_ventilator[:, 0]],
+                positions=X+w, widths=w, notch=True,
                 patch_artist=True,
                 boxprops=dict(facecolor=c, color=c),
                 capprops=dict(color=c),
@@ -92,7 +115,9 @@ def analyze_other_properties(case, property_type):
     # plot the severe data
     c = 'red'
     plt.boxplot([property_untreated[1:8, 2], property_ecmo[1:8, 2], property_nasal_cannula[1:8, 2], property_nonrebreather[1:8, 2],
-                 property_ventilator[1:8, 2], property_traditional_ventilator[1:8, 2]], positions=X+2*w, widths=w,
+                 property_ventilator[1:8, 2], property_traditional_ventilator[1:8, 2], property_ecmo_traditional_ventilator[:, 0],
+                 property_ecmo_protective_ventilator[:, 0]],
+                positions=X+2*w, widths=w,
                 notch=True, patch_artist=True,
                 boxprops=dict(facecolor=c, color=c),
                 capprops=dict(color=c),
@@ -100,7 +125,8 @@ def analyze_other_properties(case, property_type):
                 flierprops=dict(color=c, markeredgecolor=c),
                 medianprops=dict(color=c)
                 )
-    my_xticks = ['no treatment', 'ecmo', 'nasal cannula', 'nonrebreather', 'protective vent', 'traditional vent']
+    my_xticks = ['no treatment', 'ecmo', 'nasal cannula', 'nonrebreather', 'protective vent', 'traditional vent',
+                 "ecmo + traditional vent", "ecmo + protective vent"]
     # Change the x labels
     plt.xticks(X+w, my_xticks)
     plt.xlabel('Treatment')
@@ -117,6 +143,6 @@ def analyze_other_properties(case, property_type):
 # - AortaOxygenPartialPressuremmHg
 
 
-#analyze_other_properties('COPD', 'OxygenSaturation')
-#analyze_other_properties('COPD', 'TotalPulmonaryVentilationLmin')
-#analyze_other_properties('COPD', 'BloodPH')
+analyze_other_properties('COPD', 'OxygenSaturation')
+analyze_other_properties('COPD', 'TotalPulmonaryVentilationLmin')
+analyze_other_properties('COPD', 'BloodPH')
