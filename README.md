@@ -5,7 +5,7 @@ CMAKE: You have the option to download and install cmake from the website: this 
 You can also install cmake using terminal commands: 'pip install cmake' should install cmake on the computer and it should be available on the path.
 JAVA: The Pulse website recommends a download from Amazon. It is possible that you are already running Java on your computer, but it may not have all the requirements. I would still recommend using amazon coretto, and as long as 
 PYTHON: As of August 2022, Pulse would not build correctly with Python 3.10. There are no apparent errors and the sourse code builds to completion but you will get a PyPulse.so file instead of the required PyPulse-cypthon-'pythonversion'-darwin.so. In python 3.9, this would be PyPulse-cypthon-'39'-darwin.so
-Follow directions on the Pulse website to download the source code and build: [Pull and build]([url](https://gitlab.kitware.com/physiology/engine#building))
+Follow directions on the Pulse website to download the source code and build: [Pull and build]([https://gitlab.kitware.com/physiology/engine#building])
 
 # ecmo_pulse_scripts
 
