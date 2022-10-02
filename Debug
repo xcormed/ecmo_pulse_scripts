@@ -7,10 +7,12 @@ You can also install cmake using terminal commands: 'pip install cmake' should i
 
 JAVA: The Pulse website recommends a download from Amazon. It is possible that you are already running Java on your computer, but it may not have all the requirements. I would still recommend using amazon coretto. You need jdk and not jre.
 Ensure that the path is set. You will need to set the path permanently. Otherwise, everytime you restart the terminal you will be required to set the path. The following error is associated with the path not being set correctly.
+![image](https://user-images.githubusercontent.com/113397973/193475389-bdd98f59-a8b0-4130-8399-2c7682558e7d.png)
 
 
 PYTHON: As of August 2022, Pulse would not build correctly with Python 3.10. There are no apparent errors and the sourse code builds to completion but you will get a PyPulse.so file instead of the required PyPulse-cypthon-'pythonversion'-darwin.so. In python 3.9, this would be PyPulse-cypthon-'39'-darwin.so
 Follow directions on the Pulse website to download the source code and build: [Pull and build]([https://gitlab.kitware.com/physiology/engine#building])
+![image](https://user-images.githubusercontent.com/113397973/193475335-fe5d93eb-0181-40ce-a6fa-4c30f22f20d6.png)
 
 
 After a successful build, Ensure ability to run HowTo examples: cd into the install/bin folder and run: python3 ~/Pulse/engine/src/python/howto/HoWTo_example
