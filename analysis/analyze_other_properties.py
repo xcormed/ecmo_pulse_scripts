@@ -25,29 +25,29 @@ def analyze_other_properties(case, property_type):
         for j in range(len(severities)):
             # Load in each csv file corresponding to patient name, disease severity, and treatment
             data = np.genfromtxt('./test_results/XCOR/{}_untreated_{}_{}.csv'.format(case, names[i], severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             # Stick the averaged final value into the array
             property_untreated[i, j] = np.mean(data[property_type][-1000:])
 
             data = np.genfromtxt('./test_results/XCOR/{}_ecmo_{}_{}.csv'.format(case, names[i], severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             property_ecmo[i, j] = np.mean(data[property_type][-1000:])
 
             data = np.genfromtxt('./test_results/XCOR/{}_nasal_cannula_{}_{}.csv'.format(case, names[i], severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             property_nasal_cannula[i, j] = np.mean(data[property_type][-1000:])
 
             data = np.genfromtxt('./test_results/XCOR/{}_nonrebreather_{}_{}.csv'.format(case, names[i], severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             property_nonrebreather[i, j] = np.mean(data[property_type][-1000:])
 
             data = np.genfromtxt('./test_results/XCOR/{}_ventilator_{}_{}.csv'.format(case, names[i], severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             property_ventilator[i, j] = np.mean(data[property_type][-1000:])
 
             data = np.genfromtxt('./test_results/XCOR/{}_traditional_ventilator_{}_{}.csv'.format(case, names[i],
                                                                                                   severities[j]),
-                                 delimiter=',', names=True, dtype=None)
+                                 delimiter=',', names=True, dtype=None, encoding=None)
             property_traditional_ventilator[i, j] = np.mean(data[property_type][-1000:])
 
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
@@ -57,7 +57,7 @@ def analyze_other_properties(case, property_type):
 
             data = np.genfromtxt("./test_results/XCOR/{}_ecmo_protective_ventilator{}_{}.csv".format(case, names[i],
                                                                                                      severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
             property_ecmo_protective_ventilator[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1] * 1000 / 61.0168 + \
