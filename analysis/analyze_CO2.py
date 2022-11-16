@@ -24,7 +24,7 @@ def analyze_CO2(case):
     for i in range(len(names)):
         for j in range(len(severities)):
             data = np.genfromtxt("./test_results/XCOR/{}_untreated_{}_{}.csv".format(case, names[i], severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
             property_untreated[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
@@ -32,36 +32,36 @@ def analyze_CO2(case):
 
             # Load in each csv file corresponding to patient name, disease severity, and treatment
             data = np.genfromtxt("./test_results/XCOR/{}_ecmo_{}_{}.csv".format(case, names[i], severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
             property_ecmo[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
                 data["AortaCarbonDioxidePartialPressuremmHg"][-1]*.0308
 
             data = np.genfromtxt("./test_results/XCOR/{}_nasal_cannula_{}_{}.csv".format(case, names[i], severities[j]),
-                                  delimiter=",", names=True, dtype=None)
+                                  delimiter=",", names=True, dtype=None, encoding=None)
             property_nasal_cannula[i, j] = data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
             data["AortaCarbonDioxidePartialPressuremmHg"][-1]*.0308
 
             data = np.genfromtxt("./test_results/XCOR/{}_nonrebreather_{}_{}.csv".format(case, names[i], severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             property_nonrebreather[i, j] = data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
                                  data["AortaCarbonDioxidePartialPressuremmHg"][-1]*.0308
 
             data = np.genfromtxt("./test_results/XCOR/{}_ventilator_{}_{}.csv".format(case, names[i], severities[j]),
-                                delimiter=",", names=True, dtype=None)
+                                delimiter=",", names=True, dtype=None, encoding=None)
             property_ventilator[i, j] = data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
                 data["AortaCarbonDioxidePartialPressuremmHg"][-1]*.0308
 
             data = np.genfromtxt("./test_results/XCOR/{}_traditional_ventilator_{}_{}.csv".format(case, names[i],
-                            severities[j]),delimiter=",", names=True, dtype=None)
+                            severities[j]),delimiter=",", names=True, dtype=None, encoding=None)
             property_traditional_ventilator[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1]*1000/61.0168 + \
                 data["AortaCarbonDioxidePartialPressuremmHg"][-1]*.0308
 
             data = np.genfromtxt("./test_results/XCOR/{}_ecmo_traditional_ventilator{}_{}.csv".format(case, names[i],
                                                                                                       severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
             property_ecmo_traditional_ventilator[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1] * 1000 / 61.0168 + \
@@ -69,7 +69,7 @@ def analyze_CO2(case):
 
             data = np.genfromtxt("./test_results/XCOR/{}_ecmo_protective_ventilator{}_{}.csv".format(case, names[i],
                                                                                                       severities[j]),
-                                 delimiter=",", names=True, dtype=None)
+                                 delimiter=",", names=True, dtype=None, encoding=None)
             # Calculate total CO2 load with blood bicarb concentration and arterial CO2 partial pressure
             property_ecmo_protective_ventilator[i, j] = \
                 data["BicarbonateBloodConcentrationgL"][-1] * 1000 / 61.0168 + \

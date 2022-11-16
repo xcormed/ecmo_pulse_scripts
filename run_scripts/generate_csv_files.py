@@ -42,7 +42,7 @@ for name in names:
 
 for i, name in enumerate(names):
     for severity in severities:
-        processes.append(mp.Process(None, ARDS_ventilator_protective(), args=(name, severity, VTP[i])))
+        processes.append(mp.Process(None, ARDS_ventilator_protective, args=(name, severity, VTP[i])))
         processes.append(mp.Process(None, ARDS_ventilator_traditional, args=(name, severity, VTT[i])))
         processes.append(mp.Process(None, COPD_ventilator_protective, args=(name, severity, VTP[i])))
         processes.append(mp.Process(None, COPD_ventilator_traditional, args=(name, severity, VTT[i])))
